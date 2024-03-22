@@ -1,0 +1,33 @@
+import requests
+import os
+from dotenv import load_dotenv
+
+class ImageSender:
+    """
+    Classe responsável por enviar imagem para o servidor.
+    """
+
+    def __init__(self):
+        load_dotenv()
+        self.api_url = os.getenv('API_FACE_RECOGNITION')
+        self.response = 0
+  
+    def get_img(self):
+        # Obtém a primeira imagem do diretório
+        return os.listdir("./images/")[0]
+
+
+    def send(self):
+        # Obtém o caminho da imagem
+        path = "./images/" + self.get_img()
+
+        # Abre o arquivo da imagem em modo binário
+        with open(path, 'rb') as file:
+            file_data = file.read()
+
+        # dados do formulário
+        files = {'imagem': file_data}
+
+        # Envia a solicitação POST com a imagem
+        response = requests.post(f"{self.api_url}/upload", files=files)
+        self.response = response.status_code
