@@ -1,7 +1,8 @@
 # funcao que faz o reconhecimento dos rostos
 import face_recognition as fr
 import cv2
-from database.persons import get_pessoas, ultima_notificacao
+from database.persons import Person
+from database.register import Register
 import os
 from services.count_time import countTime
 
@@ -37,49 +38,63 @@ class Recognition:
     def recognize_images(self):
         img_car = os.listdir("./upload_car/")[0]
 
-        persons_db = get_pessoas()
-        last_notification = ultima_notificacao() # retorna a ultima notificação
+        persons_db = Person().getPhotos() # [(usuario_id, pessoa_id, nome_pessoa, imagem.jpg)...]
+
+        if len(persons_db) <= 0:
+            print("sem pessoas cadastradas no banco")
+            return False
+
+
+        last_notification = Register().last_register() # retorna a ultima notificação
 
         i = 0
         authorized_persons = 0 # verificar se alguma pessoa autorizada foi detectada
 
         while i < len(persons_db):
-            img_person = persons_db[i]["path"]
+            img_person = persons_db[i][3]
             path_img_person = "./upload_server/" + img_person
             path_img_car = "./upload_car/" + img_car
 
-
-            # print("analisando ", persons_db[i]["name"])
-            # print("analisando ", path_img_person)
-            # print("analisando ", path_img_car)
-
             result = self.recognition(path_img_person, path_img_car)
 
-            print(result)
+            print("result: ", result)
 
             if result == True:
 
                 authorized_persons += 1
                 
-                if last_notification[0]["id"] == persons_db[i]["id"]:
+                if last_notification[0][0] == persons_db[i][1]: # se a ultima notificacao for a da mesma pessoa
+                    
+                    if countTime(10, last_notification[0][1]):
 
-                    if countTime(10, last_notification[0]["createdAt"]):
-                        print("enviar notificacao - conhecido de novo")
+                        Register().create_register_known(
+                             f"{persons_db[i][2]} entrou no carro", # nome
+                             persons_db[i][1], # id da pessoa
+                             persons_db[i][0]) # id do usuario
+                        
                         break
                 
                 else:
-                     print("enviar notificacao - novo conhecido")
+                     Register().create_register_known(
+                        f"{persons_db[i][2]} entrou no carro", # nome
+                        persons_db[i][1], # id da pessoa
+                        persons_db[i][0]
+                    )
                      break
 
             i += 1
         
         if authorized_persons == 0: # se nenhuma pessoa autorizada tiver sido detectada
-            if last_notification[0]["id"] == None:
-                if countTime(10, last_notification[0]["createdAt"]):
-                    print("notificacao - desconhecido de novo!!")
+            if last_notification[0][0] == None:
+                if countTime(10, last_notification[0][1]):
+                    Register().create_register_unknown(
+                        "pessoa desconhecida entrou no carro"
+                    )
             
             else:
-                print("notificacao - novo desconhecido!!!")
+                 Register().create_register_unknown(
+                        "pessoa desconhecida entrou no carro"
+                    )
 
         
     

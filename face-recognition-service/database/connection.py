@@ -1,6 +1,6 @@
 import mysql.connector
 
-class BD:
+class DB:
     def __init__(self):
 
         self.mydb = mysql.connector.connect(
@@ -11,13 +11,5 @@ class BD:
         )
 
         self.mycursor = self.mydb.cursor()
-    
 
-    def insert_user(self, id, name):
-        sql = """INSERT INTO usuario 
-        (id, nome) 
-        VALUES (%s, %s)"""
-
-        self.mycursor.execute(sql, (id, name))
-        self.mydb.commit()
-    
+db = DB()

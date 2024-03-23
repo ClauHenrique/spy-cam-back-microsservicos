@@ -1,6 +1,4 @@
-from database.conection import BD
-
-bd = BD()
+from database.connection import db
 
 def create_tables():
     print("CRIANDO TABELAS...")
@@ -12,8 +10,7 @@ def create_tables():
     )
     """
 
-    bd.mycursor.execute(usuario)
-
+    db.mycursor.execute(usuario)
 
     pessoa = """
         CREATE TABLE IF NOT EXISTS pessoa (
@@ -23,11 +20,11 @@ def create_tables():
     )
     """
 
-    bd.mycursor.execute(pessoa)
+    db.mycursor.execute(pessoa)
 
     usuario_pessoa = """
         CREATE TABLE IF NOT EXISTS usuario_pessoa (
-        id PRIMARY KEY,
+        id INT PRIMARY KEY,
         usuario_id INT,
         pessoa_id INT,
         FOREIGN KEY (usuario_id) REFERENCES usuario(id),
@@ -35,33 +32,38 @@ def create_tables():
     )
     """
 
-    bd.mycursor.execute(usuario_pessoa)
+    db.mycursor.execute(usuario_pessoa)
 
     registro = """
         CREATE TABLE IF NOT EXISTS registro (
         id INT AUTO_INCREMENT PRIMARY KEY,
         mensagem VARCHAR(255),
-        enviado TINYINT(1),
         pessoa_id INT,
+        usuario_id INT,
         createdAt DATETIME NOT NULL,
         updatedAt DATETIME NOT NULL,
-        FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
+        FOREIGN KEY (pessoa_id) REFERENCES pessoa(id),
+        FOREIGN KEY (usuario_id) REFERENCES usuario(id)
     )
     """
+    db.mycursor.execute(registro)
 
-    bd.mycursor.execute(registro)
+    camera = """
+        CREATE TABLE IF NOT EXISTS camera (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        usuario_id INT,
+        FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+    )
+    """
+    db.mycursor.execute(camera)
 
-    # Fechando o cursor e a conexão
-    bd.mycursor.close()
-    bd.mydb.close()
+    print("TABELAS CRIADAS!")
 
-    print("TABELAS CRIADAS")
 
 def table_not_exists():
     sql = "SHOW TABLES"
-    bd.mycursor.execute(sql)
+    db.mycursor.execute(sql)
 
-    tables = bd.mycursor.fetchall()
+    tables = db.mycursor.fetchall()
 
     return len(tables) <= 0
-
