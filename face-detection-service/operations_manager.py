@@ -34,6 +34,7 @@ class OperationManager:
 
     def manage_requests(self):
         try:
+            print(self.img_sender.response)
             if self.send_img == True or self.ignore_time == True:
                 """
                 nao permitir que novas requisicoes sejam envidas ate que esta obtenha resposta
@@ -52,7 +53,10 @@ class OperationManager:
                 ImageHandler().delete_images()
                 self.img_sender.response = 0
 
-            if self.img_sender.response == 500:
+            elif self.img_sender.response == 400:
+                raise ValueError(f"Erro ao enviar imagem. Status da solicitacao: {self.img_sender.response}")
+
+            elif self.img_sender.response == 500:
                 """
                 ouve algum erro no servidor ao tentar processar a imagem.
                 enviar novamente
@@ -60,7 +64,7 @@ class OperationManager:
                 self.manage_requests(self)
             
         except:
-            print("erro!!")
+            raise ValueError("Erro ao enviar imagem")
     
     def countTime(self):
         # verificar se ja se passaram os 10 minutos pra poder enviar novas requisicoes

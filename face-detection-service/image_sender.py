@@ -20,14 +20,17 @@ class ImageSender:
     def send(self):
         # Obtém o caminho da imagem
         path = "./images/" + self.get_img()
+        img_name = os.path.basename(path)
 
         # Abre o arquivo da imagem em modo binário
         with open(path, 'rb') as file:
             file_data = file.read()
-
+        
         # dados do formulário
-        files = {'imagem': file_data}
+        files = {
+            'imagem': (img_name, file_data)
+        }
 
         # Envia a solicitação POST com a imagem
-        response = requests.post(f"{self.api_url}/upload", files=files)
+        response = requests.post(f"{self.api_url}/car/detectface", files=files)
         self.response = response.status_code
