@@ -7,7 +7,7 @@ class DB:
         host="localhost",
         user="root",
         password="claudio",
-        database="recognitionsv"
+        database="spy_cam"
         )
 
         self.mycursor = self.mydb.cursor()

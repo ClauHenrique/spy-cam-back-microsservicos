@@ -1,6 +1,14 @@
 #!/usr/bin/python3
 import cv2
 import time
+from auth import Auth
+
+print("FAÇA LOGIN COM SUA CONTA ANTES DE PROSEGUIR!\n")
+
+email = str(input("seu email: "))
+password = str(input("sua senha: "))
+
+Auth().login(email, password)
 
 from operations_manager import OperationManager
 

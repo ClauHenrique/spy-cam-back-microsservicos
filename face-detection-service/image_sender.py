@@ -1,6 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
+from auth import Auth
 
 class ImageSender:
     """
@@ -27,10 +28,13 @@ class ImageSender:
             file_data = file.read()
         
         # dados do formulário
+            
         files = {
-            'imagem': (img_name, file_data)
+            'imagem': (img_name, file_data),
         }
 
+        id_cam =  Auth().get_id()
+
         # Envia a solicitação POST com a imagem
-        response = requests.post(f"{self.api_url}/car/detectface", files=files)
+        response = requests.post(f"{self.api_url}/car/detectface?id_cam={id_cam}", files=files)
         self.response = response.status_code

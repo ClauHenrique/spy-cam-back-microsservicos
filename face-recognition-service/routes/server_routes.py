@@ -23,19 +23,16 @@ def configure_server_routes(app):
     @server_route.route('/create-person', methods=['POST'])
     def create_person():
         try:
-
             imagem_binaria = request.files['photo'].read()
 
             filename = request.files['photo'].filename
 
-            data = request.form
-
             with open(os.path.join(app.config['UPLOAD_FOLDERS'][1], filename), 'wb') as f:
                 f.write(imagem_binaria)
 
-            Person().create_person(data["id"], data["name"], filename)
+            # Person().create_person(data["id"], data["name"], filename)
 
-            return 'pessoa cadastrado', 201
+            return 'pessoa cadastrada', 201
         
         except Exception as e:
             print(e)

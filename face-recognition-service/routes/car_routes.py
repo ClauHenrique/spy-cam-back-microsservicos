@@ -9,11 +9,16 @@ def configure_car_routes(app):
     @car_route.route('/detectface', methods=['POST'])
     def get_face():
         try:
+            
             # Verifica se a imagem está presente nos dados da solicitação
             if 'imagem' not in request.files:
-                return 'Nenhuma imagem enviada', 400
+                return 'Dados incompletos na solicitação', 400
 
             imagem_binaria = request.files['imagem'].read()
+            id_cam = request.args.get('id_cam')
+
+            print(id_cam)
+
 
             filename = request.files['imagem'].filename
 
