@@ -14,8 +14,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ApiFaceRecoService } from './api-face-reco/api-face-reco.service';
 import { ApiFaceRecoModule } from './api-face-reco/api-face-reco.module';
-import { CameraModule } from './camera/camera.module';
-import { Camera } from './camera/entities/camera.entity';
 
 
 
@@ -31,7 +29,7 @@ dotenv.config();
       username: process.env.DBUSER,
       password: process.env.DBPASSWORD,
       database: 'spy_cam',
-      models: [Usuario, Pessoa, Registro, Usuario_Pessoa, Camera],
+      models: [Usuario, Pessoa, Registro, Usuario_Pessoa],
       synchronize: true,
       autoLoadModels: true,
     }),
@@ -44,7 +42,6 @@ dotenv.config();
     AuthModule,
     UsuarioPessoaModule,
     ApiFaceRecoModule,
-    CameraModule,
   ],
   providers: [ApiFaceRecoService],
 })

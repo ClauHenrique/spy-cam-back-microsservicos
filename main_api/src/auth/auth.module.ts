@@ -6,14 +6,12 @@ import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { UsuarioModule } from '../usuario/usuario.module';
 import * as dotenv from 'dotenv';
-import { CameraModule } from 'src/camera/camera.module';
 
 dotenv.config();
 
 @Module({
   imports: [
     UsuarioModule,
-    CameraModule,
     JwtModule.register({
       global: true,
       secret: process.env.SECRET_KEY,

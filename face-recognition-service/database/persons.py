@@ -26,13 +26,15 @@ class Person:
         db.mycursor.execute(sql, (id, name, photos))
         db.mydb.commit()
 
-    def getPhotos(self):
-        sql = """
+    def getPhotos(self, id_user):
+        db.mydb.commit()
+        
+        sql = f"""
         SELECT usuario.id AS usuario_id, pessoa.id AS pessoa_id, 
             pessoa.nome_pessoa, pessoa.fotos 
         FROM pessoa 
         JOIN usuario_pessoa ON pessoa.id = usuario_pessoa.pessoa_id 
-        JOIN usuario ON usuario.id = usuario_pessoa.usuario_id
+        JOIN usuario ON usuario.id = usuario_pessoa.usuario_id WHERE usuario.id = {id_user}
         """
         db.mycursor.execute(sql)
         res = db.mycursor.fetchall()

@@ -13,12 +13,10 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const usuario_services_1 = require("../usuario/usuario.services");
-const camera_service_1 = require("../camera/camera.service");
 const bcrypt = require("bcryptjs");
 let AuthService = class AuthService {
-    constructor(usuarioService, cameraService, jwtService) {
+    constructor(usuarioService, jwtService) {
         this.usuarioService = usuarioService;
-        this.cameraService = cameraService;
         this.jwtService = jwtService;
     }
     async login(email, senha) {
@@ -43,14 +41,7 @@ let AuthService = class AuthService {
             const user = await this.usuarioService.login(email);
             const senhaValidada = await bcrypt.compare(senha, user.senha);
             if (senhaValidada) {
-                const cam = await this.cameraService.getCamById(user.id);
-                if (!cam) {
-                    const newCam = await this.cameraService.create({
-                        usuario_id: user.id
-                    });
-                    return { id_camera: newCam.id };
-                }
-                return { id_camera: cam.id };
+                return { id_usuario: user.id };
             }
             throw new common_1.NotFoundException('Usuário não encontrado');
         }
@@ -63,7 +54,6 @@ let AuthService = class AuthService {
 AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [usuario_services_1.UsuarioService,
-        camera_service_1.CameraService,
         jwt_1.JwtService])
 ], AuthService);
 exports.AuthService = AuthService;

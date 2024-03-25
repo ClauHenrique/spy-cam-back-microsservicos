@@ -35,12 +35,10 @@ class Recognition:
             raise ValueError("Erro ao processar imagem")
     
 
-    def recognize_images(self):
+    def recognize_images(self, id_user):
         img_car = os.listdir("./upload_car/")[0]
 
-        print(img_car)
-
-        persons_db = Person().getPhotos() # [(usuario_id, pessoa_id, nome_pessoa, imagem.jpg)...]
+        persons_db = Person().getPhotos(id_user) # [(usuario_id, pessoa_id, nome_pessoa, imagem.jpg)...]
 
         if len(persons_db) <= 0:
             print("sem pessoas cadastradas no banco")
@@ -53,26 +51,13 @@ class Recognition:
         i = 0
         authorized_persons = 0 # verificar se alguma pessoa autorizada foi detectada
 
-        print(persons_db)
-
         while i < len(persons_db):
             img_person = persons_db[i][3]
             path_img_person = "./upload_server/" + img_person
             path_img_car = "./upload_car/" + img_car
 
-            print(f"""
-                cadsatrado: {persons_db[i]}
-                        VS
-                frtectado: {img_car}
-            """)
-
             result = self.recognition(path_img_person, path_img_car)
 
-            print(f"""
-                cadsatrado: {persons_db[i]}
-                        VS
-                frtectado: {img_car}
-            """)
 
             print("result: ", result)
 
@@ -81,31 +66,32 @@ class Recognition:
                 authorized_persons += 1
 
                 if len(last_notification) <= 0: # se for o primeiro registro
-                    print("primeiro")
                     Register().create_register_known(
                         f"{persons_db[i][2]} entrou no carro", # nome
                         persons_db[i][1], # id da pessoa
-                        persons_db[i][0]) # id do usuario
+                        id_user, # id do usuario
+                    )
                     
                     break
                 
                 elif last_notification[0][0] == persons_db[i][1]: # se a ultima notificacao for a da mesma pessoa
-                    print("esta pessoa apos os 10")
+
                     if countTime(10, last_notification[0][1]):
 
                         Register().create_register_known(
                              f"{persons_db[i][2]} entrou no carro", # nome
                              persons_db[i][1], # id da pessoa
-                             persons_db[i][0]) # id do usuario
+                             id_user, # id do usuario
+                        )
                         
                         break
                 
                 else:
-                     print("primeiro desta pessoa")
+                    
                      Register().create_register_known(
                         f"{persons_db[i][2]} entrou no carro", # nome
                         persons_db[i][1], # id da pessoa
-                        persons_db[i][0]
+                        id_user
                     )
                      break
 
@@ -115,22 +101,25 @@ class Recognition:
         if authorized_persons == 0: # se nenhuma pessoa autorizada tiver sido detectada
               
             if len(last_notification) <= 0: # se for o primeiro registro
-                print("primeiro desconhecido")
+                
                 Register().create_register_unknown(
-                            "pessoa desconhecida entrou no carro"
+                            "pessoa desconhecida entrou no carro",
+                            id_user
                     )
         
             elif last_notification[0][0] == None:
                 if countTime(10, last_notification[0][1]):
-                    print("desconhecido apos os 10")
+                   
                     Register().create_register_unknown(
-                        "pessoa desconhecida entrou no carro"
+                        "pessoa desconhecida entrou no carro",
+                        id_user
                     )
             
             else:
-                 print("novo desconhecido")
+                 
                  Register().create_register_unknown(
-                        "pessoa desconhecida entrou no carro"
+                        "pessoa desconhecida entrou no carro",
+                        id_user
                     )
 
         

@@ -1,5 +1,5 @@
 import { Column, HasMany, Model, Table } from 'sequelize-typescript';
-import { Camera } from 'src/camera/entities/camera.entity';
+import { Registro } from 'src/registro/entities/registro.entity';
 
 @Table({ tableName: 'usuario' })
 export class Usuario extends Model {
@@ -12,6 +12,6 @@ export class Usuario extends Model {
   @Column({ allowNull: false })
   senha: string;
 
-  @HasMany(() => Camera)
-  cameras: Camera[];
+  @HasMany(() => Registro)
+  registro: Registro[];
 }

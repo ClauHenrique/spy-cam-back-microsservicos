@@ -6,7 +6,7 @@ export declare class AuthController {
         access_token: string;
     }>;
     loginFromCar(loginDto: Record<string, any>): Promise<{
-        id_camera: string;
+        id_usuario: any;
     }>;
     getProfile(req: any): any;
 }

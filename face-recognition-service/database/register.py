@@ -11,12 +11,12 @@ class Register:
         db.mydb.commit()
 
     
-    def create_register_unknown(self, msg):
+    def create_register_unknown(self, msg, id_user):
         sql = """INSERT INTO registro 
-        (mensagem, createdAt, updatedAt) 
-        VALUES (%s, NOW(), NOW())"""
+        (mensagem, usuario_id, createdAt, updatedAt) 
+        VALUES (%s, %s, NOW(), NOW())"""
 
-        db.mycursor.execute(sql, (msg,))
+        db.mycursor.execute(sql, (msg, id_user))
         db.mydb.commit()
     
     def last_register(self):

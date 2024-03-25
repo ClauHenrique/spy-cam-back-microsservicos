@@ -33,8 +33,8 @@ class ImageSender:
             'imagem': (img_name, file_data),
         }
 
-        id_cam =  Auth().get_id()
+        id_user =  Auth().get_id()
 
         # Envia a solicitação POST com a imagem
-        response = requests.post(f"{self.api_url}/car/detectface?id_cam={id_cam}", files=files)
+        response = requests.post(f"{self.api_url}/car/detectface?id_user={id_user}", files=files)
         self.response = response.status_code

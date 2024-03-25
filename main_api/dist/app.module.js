@@ -23,8 +23,6 @@ const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
 const api_face_reco_service_1 = require("./api-face-reco/api-face-reco.service");
 const api_face_reco_module_1 = require("./api-face-reco/api-face-reco.module");
-const camera_module_1 = require("./camera/camera.module");
-const camera_entity_1 = require("./camera/entities/camera.entity");
 dotenv.config();
 let AppModule = class AppModule {
 };
@@ -38,7 +36,7 @@ AppModule = __decorate([
                 username: process.env.DBUSER,
                 password: process.env.DBPASSWORD,
                 database: 'spy_cam',
-                models: [usuario_entity_1.Usuario, pessoa_entity_1.Pessoa, registro_entity_1.Registro, usuario_pessoa_entity_1.Usuario_Pessoa, camera_entity_1.Camera],
+                models: [usuario_entity_1.Usuario, pessoa_entity_1.Pessoa, registro_entity_1.Registro, usuario_pessoa_entity_1.Usuario_Pessoa],
                 synchronize: true,
                 autoLoadModels: true,
             }),
@@ -51,7 +49,6 @@ AppModule = __decorate([
             auth_module_1.AuthModule,
             usuario_pessoa_module_1.UsuarioPessoaModule,
             api_face_reco_module_1.ApiFaceRecoModule,
-            camera_module_1.CameraModule,
         ],
         providers: [api_face_reco_service_1.ApiFaceRecoService],
     })

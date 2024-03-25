@@ -45,6 +45,7 @@ while not cv2.waitKey(20) & 0xFF == ord('q'):
             maneger.manage_requests()
         
         else:
+            print("saiu! de novo")
             maneger.unlock()
 
         # cv2.imshow('gray', gray)

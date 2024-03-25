@@ -15,7 +15,6 @@ const auth_guard_1 = require("./auth.guard");
 const auth_service_1 = require("./auth.service");
 const usuario_module_1 = require("../usuario/usuario.module");
 const dotenv = require("dotenv");
-const camera_module_1 = require("../camera/camera.module");
 dotenv.config();
 let AuthModule = class AuthModule {
 };
@@ -23,7 +22,6 @@ AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
             usuario_module_1.UsuarioModule,
-            camera_module_1.CameraModule,
             jwt_1.JwtModule.register({
                 global: true,
                 secret: process.env.SECRET_KEY,

@@ -33,7 +33,8 @@ export class PessoaService {
         msg: 'pessoa cadastrada com sucesso',
       };
     } catch (err) {
-      throw new BadRequestException('Erro ao cadastrar pessoa');
+      
+      throw new BadRequestException('Erro ao cadastrar pessoa' + err);
     }
   }
 

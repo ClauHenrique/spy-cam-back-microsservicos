@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Usuario = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
-const camera_entity_1 = require("../../camera/entities/camera.entity");
+const registro_entity_1 = require("../../registro/entities/registro.entity");
 let Usuario = class Usuario extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -27,9 +27,9 @@ __decorate([
     __metadata("design:type", String)
 ], Usuario.prototype, "senha", void 0);
 __decorate([
-    (0, sequelize_typescript_1.HasMany)(() => camera_entity_1.Camera),
+    (0, sequelize_typescript_1.HasMany)(() => registro_entity_1.Registro),
     __metadata("design:type", Array)
-], Usuario.prototype, "cameras", void 0);
+], Usuario.prototype, "registro", void 0);
 Usuario = __decorate([
     (0, sequelize_typescript_1.Table)({ tableName: 'usuario' })
 ], Usuario);

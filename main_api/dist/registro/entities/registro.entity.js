@@ -25,14 +25,18 @@ __decorate([
     __metadata("design:type", Number)
 ], Registro.prototype, "pessoa_id", void 0);
 __decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => pessoa_entity_1.Pessoa, { onDelete: 'CASCADE' }),
+    __metadata("design:type", pessoa_entity_1.Pessoa)
+], Registro.prototype, "pessoa", void 0);
+__decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => usuario_entity_1.Usuario),
     sequelize_typescript_1.Column,
     __metadata("design:type", Number)
 ], Registro.prototype, "usuario_id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => pessoa_entity_1.Pessoa, { onDelete: 'CASCADE' }),
-    __metadata("design:type", pessoa_entity_1.Pessoa)
-], Registro.prototype, "pessoa", void 0);
+    (0, sequelize_typescript_1.BelongsTo)(() => usuario_entity_1.Usuario, { onDelete: 'CASCADE' }),
+    __metadata("design:type", usuario_entity_1.Usuario)
+], Registro.prototype, "usuario", void 0);
 Registro = __decorate([
     (0, sequelize_typescript_1.Table)({ tableName: 'registro' })
 ], Registro);

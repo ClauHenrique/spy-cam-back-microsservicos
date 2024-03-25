@@ -36,7 +36,7 @@ let PessoaService = class PessoaService {
             };
         }
         catch (err) {
-            throw new common_1.BadRequestException('Erro ao cadastrar pessoa');
+            throw new common_1.BadRequestException('Erro ao cadastrar pessoa' + err);
         }
     }
     async listarPessoas() {

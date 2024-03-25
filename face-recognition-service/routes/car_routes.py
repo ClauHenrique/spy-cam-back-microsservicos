@@ -15,9 +15,10 @@ def configure_car_routes(app):
                 return 'Dados incompletos na solicitação', 400
 
             imagem_binaria = request.files['imagem'].read()
-            id_cam = request.args.get('id_cam')
-
-            print(id_cam)
+            id_user = request.args.get('id_user')
+ 
+            print("ID USUARIO: ", id_user) 
+            print("PROCESSANDO IMAGEM...")
 
 
             filename = request.files['imagem'].filename
@@ -26,7 +27,7 @@ def configure_car_routes(app):
                 f.write(imagem_binaria)
 
 
-            Recognition().recognize_images()
+            Recognition().recognize_images(id_user)
 
             delete_images_car()
 

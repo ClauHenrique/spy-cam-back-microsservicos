@@ -1,8 +1,8 @@
 import { Model } from 'sequelize-typescript';
-import { Camera } from 'src/camera/entities/camera.entity';
+import { Registro } from 'src/registro/entities/registro.entity';
 export declare class Usuario extends Model {
     nome: string;
     email: string;
     senha: string;
-    cameras: Camera[];
+    registro: Registro[];
 }
