@@ -5,6 +5,7 @@ from database.persons import Person
 from database.register import Register
 import os
 from services.count_time import countTime
+from services.rabbitmq import send_notifi_rabbitmq
 
 class Recognition:
 
@@ -56,6 +57,7 @@ class Recognition:
             path_img_person = "./upload_server/" + img_person
             path_img_car = "./upload_car/" + img_car
 
+            # fazer o reconhecimento facial
             result = self.recognition(path_img_person, path_img_car)
 
 
@@ -65,23 +67,35 @@ class Recognition:
 
                 authorized_persons += 1
 
-                if len(last_notification) <= 0: # se for o primeiro registro
+                if len(last_notification) <= 0: # se esse for o primeiro registro
                     Register().create_register_known(
                         f"{persons_db[i][2]} entrou no carro", # nome
                         persons_db[i][1], # id da pessoa
                         id_user, # id do usuario
                     )
+
+                    send_notifi_rabbitmq( # publicar msg no rabbitmq
+                        persons_db[i][1],
+                        id_user,
+                        f"{persons_db[i][2]} entrou no carro"
+                        )
                     
                     break
                 
                 elif last_notification[0][0] == persons_db[i][1]: # se a ultima notificacao for a da mesma pessoa
 
-                    if countTime(10, last_notification[0][1]):
+                    if countTime(10, last_notification[0][1]): # notificacao da mesma pessoa somente apos um certo periodo
 
                         Register().create_register_known(
                              f"{persons_db[i][2]} entrou no carro", # nome
                              persons_db[i][1], # id da pessoa
                              id_user, # id do usuario
+                        )
+
+                        send_notifi_rabbitmq( # publicar msg no rabbitmq
+                            persons_db[i][1],
+                            id_user,
+                            f"{persons_db[i][2]} entrou no carro"
                         )
                         
                         break
@@ -92,6 +106,12 @@ class Recognition:
                         f"{persons_db[i][2]} entrou no carro", # nome
                         persons_db[i][1], # id da pessoa
                         id_user
+                    )
+                    
+                     send_notifi_rabbitmq( # publicar msg no rabbitmq
+                        persons_db[i][1],
+                        id_user,
+                        f"{persons_db[i][2]} entrou no carro"
                     )
                      break
 
@@ -106,6 +126,12 @@ class Recognition:
                             "pessoa desconhecida entrou no carro",
                             id_user
                     )
+                
+                send_notifi_rabbitmq( # publicar msg no rabbitmq
+                        None,
+                        id_user,
+                        "pessoa desconhecida entrou no carro"
+                    )
         
             elif last_notification[0][0] == None:
                 if countTime(10, last_notification[0][1]):
@@ -114,12 +140,24 @@ class Recognition:
                         "pessoa desconhecida entrou no carro",
                         id_user
                     )
+
+                    send_notifi_rabbitmq( # publicar msg no rabbitmq
+                        None,
+                        id_user,
+                        "pessoa desconhecida entrou no carro"
+                    )
             
             else:
                  
                  Register().create_register_unknown(
                         "pessoa desconhecida entrou no carro",
                         id_user
+                    )
+                 
+                 send_notifi_rabbitmq( # publicar msg no rabbitmq
+                        None,
+                        id_user,
+                        "pessoa desconhecida entrou no carro"
                     )
 
         

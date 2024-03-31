@@ -14,6 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ApiFaceRecoService } from './api-face-reco/api-face-reco.service';
 import { ApiFaceRecoModule } from './api-face-reco/api-face-reco.module';
+import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 
 
 
@@ -42,6 +43,7 @@ dotenv.config();
     AuthModule,
     UsuarioPessoaModule,
     ApiFaceRecoModule,
+    RabbitmqModule,
   ],
   providers: [ApiFaceRecoService],
 })
