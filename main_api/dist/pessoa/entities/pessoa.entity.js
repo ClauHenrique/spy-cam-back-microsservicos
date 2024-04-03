@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Pessoa = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const registro_entity_1 = require("../../registro/entities/registro.entity");
+const usuario_pessoa_entity_1 = require("../../usuario_pessoa/entities/usuario_pessoa.entity");
 let Pessoa = class Pessoa extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -26,6 +27,10 @@ __decorate([
     (0, sequelize_typescript_1.HasMany)(() => registro_entity_1.Registro),
     __metadata("design:type", Array)
 ], Pessoa.prototype, "registro", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => usuario_pessoa_entity_1.Usuario_Pessoa),
+    __metadata("design:type", Array)
+], Pessoa.prototype, "schedules", void 0);
 Pessoa = __decorate([
     (0, sequelize_typescript_1.Table)({ tableName: 'pessoa' })
 ], Pessoa);

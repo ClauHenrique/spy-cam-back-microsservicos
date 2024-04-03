@@ -8,9 +8,7 @@ export declare class PessoaService {
     cadastrarPessoa(pessoa: any, fotos: any, usuario: any): Promise<{
         msg: string;
     }>;
-    listarPessoas(): Promise<{
-        dados: Pessoa[];
-    }>;
+    listarPessoas(id_usuario: number): Promise<Pessoa[]>;
     removerPessoa(pessoa_id: any): Promise<{
         dados: string;
     }>;

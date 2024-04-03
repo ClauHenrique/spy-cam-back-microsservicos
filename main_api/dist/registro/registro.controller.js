@@ -22,8 +22,9 @@ let RegistroController = class RegistroController {
     constructor(registroService) {
         this.registroService = registroService;
     }
-    async listarRegistro() {
-        return this.registroService.listarRegistros();
+    async listarRegistro(req) {
+        const id_usuario = req['user'].sub;
+        return this.registroService.listarRegistros(id_usuario);
     }
     async cadastrarRegistros(registro) {
         return this.registroService.cadastrarRegistro(registro);
@@ -54,10 +55,10 @@ let RegistroController = class RegistroController {
     }
 };
 __decorate([
-    (0, public_decorator_1.Public)(),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RegistroController.prototype, "listarRegistro", null);
 __decorate([
