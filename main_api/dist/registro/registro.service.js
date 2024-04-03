@@ -31,10 +31,11 @@ let RegistroService = class RegistroService {
             throw new Error(`não foi posível realizar o cadastro. ${err.message}`);
         }
     }
-    async listarRegistros() {
+    async listarRegistros(id_usuario) {
         try {
             const registros = await this.registroRepository.findAll({
                 order: [['createdAt', 'DESC']],
+                where: { usuario_id: id_usuario }
             });
             return registros;
         }

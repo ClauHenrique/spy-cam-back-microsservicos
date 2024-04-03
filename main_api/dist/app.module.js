@@ -23,6 +23,7 @@ const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
 const api_face_reco_service_1 = require("./api-face-reco/api-face-reco.service");
 const api_face_reco_module_1 = require("./api-face-reco/api-face-reco.module");
+const rabbitmq_module_1 = require("./rabbitmq/rabbitmq.module");
 dotenv.config();
 let AppModule = class AppModule {
 };
@@ -49,6 +50,7 @@ AppModule = __decorate([
             auth_module_1.AuthModule,
             usuario_pessoa_module_1.UsuarioPessoaModule,
             api_face_reco_module_1.ApiFaceRecoModule,
+            rabbitmq_module_1.RabbitmqModule,
         ],
         providers: [api_face_reco_service_1.ApiFaceRecoService],
     })

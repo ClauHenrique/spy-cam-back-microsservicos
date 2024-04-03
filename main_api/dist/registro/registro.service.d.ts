@@ -6,7 +6,7 @@ export declare class RegistroService {
     cadastrarRegistro(dados: any): Promise<{
         msg: string;
     }>;
-    listarRegistros(): Promise<Registro[]>;
+    listarRegistros(id_usuario: number): Promise<Registro[]>;
     listarUltimoRegistro(): Promise<Registro[]>;
     atualizarRegistro(): Promise<void>;
 }

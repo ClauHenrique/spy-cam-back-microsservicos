@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   Res,
   Sse,
 } from '@nestjs/common';
@@ -12,16 +13,16 @@ import { Public } from '../auth/decorators/public.decorator';
 import { RegistroService } from './registro.service';
 import { CreateRegistroDto } from './dto/registro.dto';
 import { Observable, defer, map, repeat, tap } from 'rxjs';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('registro')
 export class RegistroController {
   constructor(private registroService: RegistroService) {}
 
-  @Public()
   @Get()
-  async listarRegistro() {
-    return this.registroService.listarRegistros();
+  async listarRegistro(@Req() req: Request) {
+    const id_usuario: number = req['user'].sub
+    return this.registroService.listarRegistros(id_usuario);
   }
 
   @Public()

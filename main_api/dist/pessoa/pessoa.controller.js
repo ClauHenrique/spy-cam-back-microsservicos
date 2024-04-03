@@ -35,8 +35,9 @@ let PessoaController = class PessoaController {
         this.pessoaService.cadastrarPessoa(pessoa, arrayFotos, usuario);
         await this.apiRecogService.sendImgPerson(arrayFotos);
     }
-    async listarPessoas() {
-        return this.pessoaService.listarPessoas();
+    async listarPessoas(req) {
+        const id_usuario = req['user'].sub;
+        return this.pessoaService.listarPessoas(id_usuario);
     }
     async apagarPessoa(pessoa_id) {
         return this.pessoaService.removerPessoa(pessoa_id);
@@ -65,10 +66,10 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PessoaController.prototype, "cadastrarPessoa", null);
 __decorate([
-    (0, public_decorator_1.Public)(),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], PessoaController.prototype, "listarPessoas", null);
 __decorate([

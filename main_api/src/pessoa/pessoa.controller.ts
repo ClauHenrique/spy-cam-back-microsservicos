@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Req,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { diskStorage } from 'multer';
 import { CurrentUser } from '../usuario/usuario.guard';
 import { Public } from '../auth/decorators/public.decorator';
 import { ApiFaceRecoService } from 'src/api-face-reco/api-face-reco.service';
+import { Request } from 'express';
 
 @Controller('pessoa')
 export class PessoaController {
@@ -58,10 +60,13 @@ export class PessoaController {
     await this.apiRecogService.sendImgPerson(arrayFotos)
   }
 
-  @Public()
   @Get()
-  async listarPessoas() {
-    return this.pessoaService.listarPessoas();
+  async listarPessoas(@Req() req: Request) {
+
+    const id_usuario: number = req['user'].sub
+    
+   
+    return this.pessoaService.listarPessoas(id_usuario);
   }
 
   @Public()

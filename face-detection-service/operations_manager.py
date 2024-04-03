@@ -61,8 +61,11 @@ class OperationManager:
                 ouve algum erro no servidor ao tentar processar a imagem.
                 enviar novamente
                 """
-                self.manage_requests(self)
-            
+                self.manage_requests(self) 
+                # ISSO ESTÁ ERRADO! TENHO QUE REINICIAR TODAS AS OPERAÇÕES, SALVAR E ENVIAR UMA NOVA IMAGEM
+                # ou entao nao fazer nada, ja q o servidor nao está conseguindo processar a imagem (status 500)
+                # ver o que é melhor a se fazer
+                
         except:
             raise ValueError("Erro ao enviar imagem")
     
