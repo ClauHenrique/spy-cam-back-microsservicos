@@ -38,12 +38,17 @@ export class PessoaService {
     }
   }
 
-  async listarPessoas() {
+  async listarPessoas(id_usuario: number) {
     try {
-      const pessoas = await this.pessoaRepository.findAll();
-      return {
-        dados: pessoas,
-      };
+      const pessoas = await this.pessoaRepository.findAll({
+        include: [
+          {
+            model: Usuario_Pessoa,
+            where: { usuario_id: id_usuario }   
+          }
+        ]
+      });
+      return pessoas;
     } catch (err) {
       throw new Error(`não foi posível listar ${err.message}`);
     }

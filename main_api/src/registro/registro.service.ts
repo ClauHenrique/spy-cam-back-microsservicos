@@ -22,10 +22,11 @@ export class RegistroService {
     }
   }
 
-  async listarRegistros() {
+  async listarRegistros(id_usuario: number) {
     try {
       const registros = await this.registroRepository.findAll({
         order: [['createdAt', 'DESC']],
+        where: { usuario_id: id_usuario }
       });
       return registros;
     } catch (err) {
