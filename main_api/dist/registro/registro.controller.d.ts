@@ -1,15 +1,18 @@
+import { MessageEvent } from '@nestjs/common';
 import { RegistroService } from './registro.service';
 import { CreateRegistroDto } from './dto/registro.dto';
 import { Observable } from 'rxjs';
-import { Request, Response } from 'express';
+import { Request } from 'express';
+import { RabbitmqService } from 'src/rabbitmq/rabbitmq.service';
 export declare class RegistroController {
     private registroService;
-    constructor(registroService: RegistroService);
+    private rabbitmqService;
+    constructor(registroService: RegistroService, rabbitmqService: RabbitmqService);
     listarRegistro(req: Request): Promise<import("./entities/registro.entity").Registro[]>;
     cadastrarRegistros(registro: CreateRegistroDto): Promise<any>;
     atualizarRegistro(registro_id: any): Promise<void>;
     buscarUltimoRegistro(): Promise<{
-        data: import("./entities/registro.entity").Registro[];
+        data: any[];
     }>;
-    Notificar(response: Response): Promise<Observable<any>>;
+    Notificar(): Observable<MessageEvent>;
 }

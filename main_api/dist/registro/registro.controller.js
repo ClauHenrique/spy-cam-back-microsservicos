@@ -18,9 +18,11 @@ const public_decorator_1 = require("../auth/decorators/public.decorator");
 const registro_service_1 = require("./registro.service");
 const registro_dto_1 = require("./dto/registro.dto");
 const rxjs_1 = require("rxjs");
+const rabbitmq_service_1 = require("../rabbitmq/rabbitmq.service");
 let RegistroController = class RegistroController {
-    constructor(registroService) {
+    constructor(registroService, rabbitmqService) {
         this.registroService = registroService;
+        this.rabbitmqService = rabbitmqService;
     }
     async listarRegistro(req) {
         const id_usuario = req['user'].sub;
@@ -33,25 +35,11 @@ let RegistroController = class RegistroController {
         await this.registroService.atualizarRegistro();
     }
     async buscarUltimoRegistro() {
-        const registro = await this.registroService.listarUltimoRegistro();
-        if (registro.length > 0) {
-            await this.registroService.atualizarRegistro();
-        }
-        return { data: registro };
+        return { data: [] };
     }
-    async Notificar(response) {
-        return (0, rxjs_1.defer)(() => this.buscarUltimoRegistro()).pipe((0, rxjs_1.repeat)({
-            delay: 1000,
-        }), (0, rxjs_1.tap)((registro) => {
-            if (registro['enviado'] === 1) {
-                setTimeout(() => {
-                    response.end();
-                }, 5000);
-            }
-        }), (0, rxjs_1.map)((registro) => ({
-            type: 'message',
-            data: registro,
-        })));
+    Notificar() {
+        this.rabbitmqService.ConsumeMessageRabbitmq(3);
+        return (0, rxjs_1.interval)(1000).pipe((0, rxjs_1.map)((_) => (this.rabbitmqService.getMessages())));
     }
 };
 __decorate([
@@ -79,15 +67,15 @@ __decorate([
 ], RegistroController.prototype, "atualizarRegistro", null);
 __decorate([
     (0, public_decorator_1.Public)(),
-    (0, common_1.Sse)('watch'),
-    __param(0, (0, common_1.Res)()),
+    (0, common_1.Sse)('sse'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", rxjs_1.Observable)
 ], RegistroController.prototype, "Notificar", null);
 RegistroController = __decorate([
     (0, common_1.Controller)('registro'),
-    __metadata("design:paramtypes", [registro_service_1.RegistroService])
+    __metadata("design:paramtypes", [registro_service_1.RegistroService,
+        rabbitmq_service_1.RabbitmqService])
 ], RegistroController);
 exports.RegistroController = RegistroController;
 //# sourceMappingURL=registro.controller.js.map

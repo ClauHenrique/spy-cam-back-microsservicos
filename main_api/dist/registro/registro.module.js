@@ -12,11 +12,15 @@ const sequelize_1 = require("@nestjs/sequelize");
 const registro_service_1 = require("./registro.service");
 const registro_controller_1 = require("./registro.controller");
 const registro_entity_1 = require("./entities/registro.entity");
+const rabbitmq_module_1 = require("../rabbitmq/rabbitmq.module");
 let RegistroModule = class RegistroModule {
 };
 RegistroModule = __decorate([
     (0, common_1.Module)({
-        imports: [sequelize_1.SequelizeModule.forFeature([registro_entity_1.Registro])],
+        imports: [
+            sequelize_1.SequelizeModule.forFeature([registro_entity_1.Registro]),
+            rabbitmq_module_1.RabbitmqModule
+        ],
         providers: [registro_service_1.RegistroService],
         controllers: [registro_controller_1.RegistroController],
     })

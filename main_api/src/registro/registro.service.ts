@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Repository } from 'sequelize-typescript';
 import { Registro } from './entities/registro.entity';
@@ -7,8 +7,9 @@ import { Registro } from './entities/registro.entity';
 export class RegistroService {
   constructor(
     @InjectModel(Registro)
-    private registroRepository: Repository<Registro>,
+    private registroRepository: Repository<Registro>
   ) {}
+
 
   async cadastrarRegistro(dados) {
     try {

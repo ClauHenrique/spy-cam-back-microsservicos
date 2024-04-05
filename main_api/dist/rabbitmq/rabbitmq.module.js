@@ -8,10 +8,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RabbitmqModule = void 0;
 const common_1 = require("@nestjs/common");
+const rabbitmq_service_1 = require("./rabbitmq.service");
 let RabbitmqModule = class RabbitmqModule {
 };
 RabbitmqModule = __decorate([
-    (0, common_1.Module)({})
+    (0, common_1.Module)({
+        providers: [
+            rabbitmq_service_1.RabbitmqService
+        ],
+        exports: [rabbitmq_service_1.RabbitmqService],
+    })
 ], RabbitmqModule);
 exports.RabbitmqModule = RabbitmqModule;
 //# sourceMappingURL=rabbitmq.module.js.map

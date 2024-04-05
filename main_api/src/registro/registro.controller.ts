@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  MessageEvent,
   Param,
   Patch,
   Post,
@@ -12,18 +13,25 @@ import {
 import { Public } from '../auth/decorators/public.decorator';
 import { RegistroService } from './registro.service';
 import { CreateRegistroDto } from './dto/registro.dto';
-import { Observable, defer, map, repeat, tap } from 'rxjs';
+import { Observable, defer, interval, map, repeat, tap} from 'rxjs';
 import { Request, Response } from 'express';
+import { RabbitmqService } from 'src/rabbitmq/rabbitmq.service';
+
 
 @Controller('registro')
 export class RegistroController {
-  constructor(private registroService: RegistroService) {}
+  constructor(
+    private registroService: RegistroService,
+    private rabbitmqService: RabbitmqService
+    ) {}
 
   @Get()
   async listarRegistro(@Req() req: Request) {
     const id_usuario: number = req['user'].sub
     return this.registroService.listarRegistros(id_usuario);
   }
+ 
+
 
   @Public()
   @Post('/cadastro')
@@ -38,35 +46,25 @@ export class RegistroController {
   }
 
   async buscarUltimoRegistro() {
-    const registro = await this.registroService.listarUltimoRegistro();
+    // const registro = await this.registroService.listarUltimoRegistro();
    
-    // nao tem como atualizar um registro se nao houver registro la.
-    // entao podemos retornar um registro vazio sem problemas
-    if (registro.length > 0) {
-      await this.registroService.atualizarRegistro() 
-    }
+    // // nao tem como atualizar um registro se nao houver registro la.
+    // // entao podemos retornar um registro vazio sem problemas
+    // if (registro.length > 0) {
+    //   await this.registroService.atualizarRegistro() 
+    // }
     
-    return { data: registro };
+    return { data: [] };
   }
 
   @Public()
-  @Sse('watch')
-  async Notificar(@Res() response: Response): Promise<Observable<any>> {
-    return defer(() => this.buscarUltimoRegistro()).pipe(
-      repeat({
-        delay: 1000,
-      }),
-      tap((registro) => {
-        if (registro['enviado'] === 1) {
-          setTimeout(() => {
-            response.end();
-          }, 5000);
-        }
-      }),
-      map((registro) => ({
-        type: 'message',
-        data: registro,
-      })),
-    );
+  @Sse('sse')
+  Notificar(): Observable<MessageEvent> {
+
+    this.rabbitmqService.ConsumeMessageRabbitmq(3)
+    
+    return interval(1000).pipe(map((_) => (this.rabbitmqService.getMessages())));
   }
-}
+
+} 
+ 
