@@ -8,7 +8,9 @@ export class RabbitmqService {
     data: []
   }
 
-  async ConsumeMessageRabbitmq(id_usuario: number) {
+  id_user: number = 0
+
+  async ConsumeMessageRabbitmq() {
     
 
     return new Promise((resolve, reject) => {
@@ -34,7 +36,12 @@ export class RabbitmqService {
             const content = msg.content.toString();
             const data = JSON.parse(content);
 
-            if (data.id_user == id_usuario) {
+            if (data.id_user == this.id_user) {
+              console.log("esse");
+              
+
+              this.id_user = 0
+              
               console.log(" [x] Received %s", data);
               
               // remover da fila
@@ -51,10 +58,17 @@ export class RabbitmqService {
     });
   }
 
-  getMessages(): any {
+  async getMessages(id_user: number) {
+
+    this.id_user = id_user
+    
+    console.log(this.id_user);
+    
+    
     const data = {
       data: this.dataRabbitmq.data.slice()
     }
+    
 
     if (data.data.length > 0) {
       this.dataRabbitmq.data = []

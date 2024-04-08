@@ -20,10 +20,15 @@ import { RabbitmqService } from 'src/rabbitmq/rabbitmq.service';
 
 @Controller('registro')
 export class RegistroController {
+
+  execRabbitmq: boolean = true
+
   constructor(
     private registroService: RegistroService,
     private rabbitmqService: RabbitmqService
-    ) {}
+    ) {
+      this.rabbitmqService.ConsumeMessageRabbitmq()
+    }
 
   @Get()
   async listarRegistro(@Req() req: Request) {
@@ -54,16 +59,43 @@ export class RegistroController {
     //   await this.registroService.atualizarRegistro() 
     // }
     
-    return { data: [] };
+    return { enviado: 1, msg: "pessoa..." };
   }
 
-  @Public()
-  @Sse('sse')
-  Notificar(): Observable<MessageEvent> {
+  // @Public()
+  // @Sse('sse')
+  // Notificar(): Observable<MessageEvent> {
 
-    this.rabbitmqService.ConsumeMessageRabbitmq(3)
+  //   this.rabbitmqService.ConsumeMessageRabbitmq(3)
     
-    return interval(1000).pipe(map((_) => (this.rabbitmqService.getMessages())));
+  //   return interval(1000).pipe(map((_) => (this.rabbitmqService.getMessages())));
+  // }
+
+ 
+  @Sse('sse')
+  async Notificar(@Res() response: Response, @Req() request: Request): Promise<Observable<any>> {
+
+    const id_user: number = request['user'].sub
+   
+    response.setHeader('Content-Type', 'text/event-stream');
+    response.setHeader('Cache-Control', 'no-cache');
+    response.setHeader('Connection', 'keep-alive');
+
+    return defer(() => this.rabbitmqService.getMessages(id_user)).pipe(
+      repeat({
+        delay: 1000,
+      }),
+      tap((registro) => {
+        console.log(registro);
+          setTimeout(() => {
+            response.end();
+          }, 2000);
+      }),
+      map((registro) => ({
+        type: 'message',
+        data: registro,
+      })),
+    );
   }
 
 } 

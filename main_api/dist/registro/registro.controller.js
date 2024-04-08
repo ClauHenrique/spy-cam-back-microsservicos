@@ -23,6 +23,8 @@ let RegistroController = class RegistroController {
     constructor(registroService, rabbitmqService) {
         this.registroService = registroService;
         this.rabbitmqService = rabbitmqService;
+        this.execRabbitmq = true;
+        this.rabbitmqService.ConsumeMessageRabbitmq();
     }
     async listarRegistro(req) {
         const id_usuario = req['user'].sub;
@@ -35,11 +37,24 @@ let RegistroController = class RegistroController {
         await this.registroService.atualizarRegistro();
     }
     async buscarUltimoRegistro() {
-        return { data: [] };
+        return { enviado: 1, msg: "pessoa..." };
     }
-    Notificar() {
-        this.rabbitmqService.ConsumeMessageRabbitmq(3);
-        return (0, rxjs_1.interval)(1000).pipe((0, rxjs_1.map)((_) => (this.rabbitmqService.getMessages())));
+    async Notificar(response, request) {
+        const id_user = request['user'].sub;
+        response.setHeader('Content-Type', 'text/event-stream');
+        response.setHeader('Cache-Control', 'no-cache');
+        response.setHeader('Connection', 'keep-alive');
+        return (0, rxjs_1.defer)(() => this.rabbitmqService.getMessages(id_user)).pipe((0, rxjs_1.repeat)({
+            delay: 1000,
+        }), (0, rxjs_1.tap)((registro) => {
+            console.log(registro);
+            setTimeout(() => {
+                response.end();
+            }, 2000);
+        }), (0, rxjs_1.map)((registro) => ({
+            type: 'message',
+            data: registro,
+        })));
     }
 };
 __decorate([
@@ -66,11 +81,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RegistroController.prototype, "atualizarRegistro", null);
 __decorate([
-    (0, public_decorator_1.Public)(),
     (0, common_1.Sse)('sse'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", rxjs_1.Observable)
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
 ], RegistroController.prototype, "Notificar", null);
 RegistroController = __decorate([
     (0, common_1.Controller)('registro'),

@@ -14,8 +14,9 @@ let RabbitmqService = class RabbitmqService {
         this.dataRabbitmq = {
             data: []
         };
+        this.id_user = 0;
     }
-    async ConsumeMessageRabbitmq(id_usuario) {
+    async ConsumeMessageRabbitmq() {
         return new Promise((resolve, reject) => {
             amqp.connect('amqp://admin:admin@localhost', (error0, connection) => {
                 if (error0) {
@@ -35,7 +36,9 @@ let RabbitmqService = class RabbitmqService {
                     channel.consume(queue, (msg) => {
                         const content = msg.content.toString();
                         const data = JSON.parse(content);
-                        if (data.id_user == id_usuario) {
+                        if (data.id_user == this.id_user) {
+                            console.log("esse");
+                            this.id_user = 0;
                             console.log(" [x] Received %s", data);
                             channel.ack(msg);
                             this.dataRabbitmq.data.push(data);
@@ -47,7 +50,9 @@ let RabbitmqService = class RabbitmqService {
             });
         });
     }
-    getMessages() {
+    async getMessages(id_user) {
+        this.id_user = id_user;
+        console.log(this.id_user);
         const data = {
             data: this.dataRabbitmq.data.slice()
         };

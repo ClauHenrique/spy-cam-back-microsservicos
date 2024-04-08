@@ -2,6 +2,9 @@ export declare class RabbitmqService {
     dataRabbitmq: {
         data: any[];
     };
-    ConsumeMessageRabbitmq(id_usuario: number): Promise<unknown>;
-    getMessages(): any;
+    id_user: number;
+    ConsumeMessageRabbitmq(): Promise<unknown>;
+    getMessages(id_user: number): Promise<{
+        data: any[];
+    }>;
 }
