@@ -21,8 +21,6 @@ import { RabbitmqService } from 'src/rabbitmq/rabbitmq.service';
 @Controller('registro')
 export class RegistroController {
 
-  execRabbitmq: boolean = true
-
   constructor(
     private registroService: RegistroService,
     private rabbitmqService: RabbitmqService
@@ -36,41 +34,6 @@ export class RegistroController {
     return this.registroService.listarRegistros(id_usuario);
   }
  
-
-
-  @Public()
-  @Post('/cadastro')
-  async cadastrarRegistros(@Body() registro: CreateRegistroDto): Promise<any> {
-    return this.registroService.cadastrarRegistro(registro);
-  }
-
-  @Public()
-  @Patch(':registro_id')
-  async atualizarRegistro(@Param() registro_id) {
-    await this.registroService.atualizarRegistro();
-  }
-
-  async buscarUltimoRegistro() {
-    // const registro = await this.registroService.listarUltimoRegistro();
-   
-    // // nao tem como atualizar um registro se nao houver registro la.
-    // // entao podemos retornar um registro vazio sem problemas
-    // if (registro.length > 0) {
-    //   await this.registroService.atualizarRegistro() 
-    // }
-    
-    return { enviado: 1, msg: "pessoa..." };
-  }
-
-  // @Public()
-  // @Sse('sse')
-  // Notificar(): Observable<MessageEvent> {
-
-  //   this.rabbitmqService.ConsumeMessageRabbitmq(3)
-    
-  //   return interval(1000).pipe(map((_) => (this.rabbitmqService.getMessages())));
-  // }
-
  
   @Sse('sse')
   async Notificar(@Res() response: Response, @Req() request: Request): Promise<Observable<any>> {
