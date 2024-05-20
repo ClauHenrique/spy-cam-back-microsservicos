@@ -6,6 +6,7 @@ from database.register import Register
 import os
 from services.count_time import countTime
 from services.rabbitmq import send_notifi_rabbitmq
+from analises.df_results import Results
 
 class Recognition:
 
@@ -36,7 +37,10 @@ class Recognition:
             raise ValueError("Erro ao processar imagem")
     
 
-    def recognize_images(self, id_user):
+    def recognize_images(self, id_user, detection_time):
+
+        df_results = Results()
+
         img_car = os.listdir("./upload_car/")[0]
 
         persons_db = Person().getPhotos(id_user) # [(usuario_id, pessoa_id, nome_pessoa, imagem.jpg)...]
@@ -64,10 +68,12 @@ class Recognition:
             print("result: ", result)
 
             if result == True:
+                df_results.create_results_df(result, True, detection_time) # salvar no dataFrame
 
                 authorized_persons += 1
 
                 if len(last_notification) <= 0: # se esse for o primeiro registro
+
                     Register().create_register_known(
                         f"{persons_db[i][2]} entrou no carro", # nome
                         persons_db[i][1], # id da pessoa
@@ -101,7 +107,7 @@ class Recognition:
                         break
                 
                 else:
-                    
+
                      Register().create_register_known(
                         f"{persons_db[i][2]} entrou no carro", # nome
                         persons_db[i][1], # id da pessoa
@@ -116,6 +122,8 @@ class Recognition:
                      break
 
             i += 1
+
+        df_results.create_results_df(result, True, detection_time) # salvar no dataFrame
         
         
         if authorized_persons == 0: # se nenhuma pessoa autorizada tiver sido detectada

@@ -16,6 +16,9 @@ def configure_car_routes(app):
 
             imagem_binaria = request.files['imagem'].read()
             id_user = request.args.get('id_user')
+
+            detection_time = request.args.get('detection_time')
+            print("HORA DA DETECCAO: ", detection_time)
  
             print("ID USUARIO: ", id_user) 
             print("PROCESSANDO IMAGEM...")
@@ -27,7 +30,7 @@ def configure_car_routes(app):
                 f.write(imagem_binaria)
 
 
-            Recognition().recognize_images(id_user)
+            Recognition().recognize_images(id_user, detection_time)
 
             delete_images_car()
 

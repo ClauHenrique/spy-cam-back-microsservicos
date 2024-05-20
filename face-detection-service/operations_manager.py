@@ -46,26 +46,27 @@ class OperationManager:
                 self.ignore_time = False
                 self.detection_time = datetime.now() # inicio da contagem de tempo da ultima requisicao enviada
 
-                threading.Thread(target=self.img_sender.send).start()
+                threading.Thread(target=self.img_sender.send, args=[self.detection_time]).start()
             
-            if self.img_sender.response == 200:
-                
-                ImageHandler().delete_images()
-                self.img_sender.response = 0
+            if self.img_sender.waiting != True:
+                if self.img_sender.response == 200:
+                    
+                    ImageHandler().delete_images()
+                    self.img_sender.response = 0
 
-            elif self.img_sender.response == 400:
-                raise ValueError(f"Erro ao enviar imagem. Status da solicitacao: {self.img_sender.response}")
+                elif self.img_sender.response == 400:
+                    ImageHandler().delete_images()
+                    raise ValueError(f"Erro ao enviar imagem. Status da solicitacao: {self.img_sender.response}")
 
-            elif self.img_sender.response == 500:
-                """
-                ouve algum erro no servidor ao tentar processar a imagem.
-                enviar novamente
-                """
-                self.manage_requests(self) 
-                # ISSO ESTÁ ERRADO! TENHO QUE REINICIAR TODAS AS OPERAÇÕES, SALVAR E ENVIAR UMA NOVA IMAGEM
-                # ou entao nao fazer nada, ja q o servidor nao está conseguindo processar a imagem (status 500)
-                # ver o que é melhor a se fazer
-                
+                elif self.img_sender.response == 500:
+                    """
+                    ouve algum erro no servidor ao tentar processar a imagem.
+                    enviar novamente
+                    """
+                    ImageHandler().delete_images()
+
+                    self.unlock()
+                    
         except:
             raise ValueError("Erro ao enviar imagem")
     
@@ -87,3 +88,5 @@ class OperationManager:
         self.send_img = True
         self.ignore_time = True
         self.img_sender.response = 0
+
+        ImageHandler().delete_images()

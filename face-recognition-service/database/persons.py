@@ -39,3 +39,15 @@ class Person:
         db.mycursor.execute(sql)
         res = db.mycursor.fetchall()
         return res
+    
+    def get_persons(self, id_user):
+        db.mydb.commit()
+        
+        sql = f"""
+        select nome_pessoa, fotos from pessoa 
+        join usuario_pessoa on pessoa.id = usuario_pessoa.pessoa_id 
+        where usuario_pessoa.usuario_id = 3 = {id_user}
+        """
+        db.mycursor.execute(sql)
+        res = db.mycursor.fetchall()
+        return res

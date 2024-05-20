@@ -17,6 +17,10 @@ class ImageHandler:
         filename = datetime.now().strftime("%H:%M:%S") + ".jpg"
         filepath = output_dir + filename
         cv2.imwrite(filepath, frame)
+
+        # vou salvar uma copia dessas imagens num cunjunto de dados para que eu possa demonstrar meus testes
+        path_df = './df_pessoas_detectadas/' + filename
+        cv2.imwrite(path_df, frame)
     
 
     def delete_images(self):

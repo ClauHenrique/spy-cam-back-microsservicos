@@ -20,17 +20,6 @@ let RegistroService = class RegistroService {
     constructor(registroRepository) {
         this.registroRepository = registroRepository;
     }
-    async cadastrarRegistro(dados) {
-        try {
-            await this.registroRepository.create(dados);
-            return {
-                msg: 'registrado com sucesso',
-            };
-        }
-        catch (err) {
-            throw new Error(`não foi posível realizar o cadastro. ${err.message}`);
-        }
-    }
     async listarRegistros(id_usuario) {
         try {
             const registros = await this.registroRepository.findAll({
@@ -42,32 +31,6 @@ let RegistroService = class RegistroService {
         catch (err) {
             throw new Error(`não foi posível encontrar nada. ${err.message}`);
         }
-    }
-    async listarUltimoRegistro() {
-        try {
-            const registro = await this.registroRepository.findAll({
-                limit: 1,
-                order: [['createdAt', 'DESC']],
-                where: {
-                    enviado: 1,
-                },
-            });
-            return registro;
-        }
-        catch (err) {
-            throw new Error(`não foi posível encontrar nada. ${err.message}`);
-        }
-    }
-    async atualizarRegistro() {
-        const registro = await this.registroRepository.findOne({
-            limit: 1,
-            order: [['createdAt', 'DESC']],
-        });
-        await this.registroRepository.update({ enviado: 0 }, {
-            where: {
-                id: registro.id,
-            },
-        });
     }
 };
 RegistroService = __decorate([

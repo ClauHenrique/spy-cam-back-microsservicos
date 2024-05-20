@@ -14,30 +14,18 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegistroController = void 0;
 const common_1 = require("@nestjs/common");
-const public_decorator_1 = require("../auth/decorators/public.decorator");
 const registro_service_1 = require("./registro.service");
-const registro_dto_1 = require("./dto/registro.dto");
 const rxjs_1 = require("rxjs");
 const rabbitmq_service_1 = require("../rabbitmq/rabbitmq.service");
 let RegistroController = class RegistroController {
     constructor(registroService, rabbitmqService) {
         this.registroService = registroService;
         this.rabbitmqService = rabbitmqService;
-        this.execRabbitmq = true;
         this.rabbitmqService.ConsumeMessageRabbitmq();
     }
     async listarRegistro(req) {
         const id_usuario = req['user'].sub;
         return this.registroService.listarRegistros(id_usuario);
-    }
-    async cadastrarRegistros(registro) {
-        return this.registroService.cadastrarRegistro(registro);
-    }
-    async atualizarRegistro(registro_id) {
-        await this.registroService.atualizarRegistro();
-    }
-    async buscarUltimoRegistro() {
-        return { enviado: 1, msg: "pessoa..." };
     }
     async Notificar(response, request) {
         const id_user = request['user'].sub;
@@ -64,22 +52,6 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RegistroController.prototype, "listarRegistro", null);
-__decorate([
-    (0, public_decorator_1.Public)(),
-    (0, common_1.Post)('/cadastro'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [registro_dto_1.CreateRegistroDto]),
-    __metadata("design:returntype", Promise)
-], RegistroController.prototype, "cadastrarRegistros", null);
-__decorate([
-    (0, public_decorator_1.Public)(),
-    (0, common_1.Patch)(':registro_id'),
-    __param(0, (0, common_1.Param)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], RegistroController.prototype, "atualizarRegistro", null);
 __decorate([
     (0, common_1.Sse)('sse'),
     __param(0, (0, common_1.Res)()),

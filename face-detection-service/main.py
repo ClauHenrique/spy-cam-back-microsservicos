@@ -40,8 +40,9 @@ while not cv2.waitKey(20) & 0xFF == ord('q'):
 
         # so salvamos a imagem se ela conter um rosto
         if len(face_capture) > 0:
+            time.sleep(0.5)
             maneger.countTime()
-            maneger.save_image(frame)
+            maneger.save_image(gray)
             maneger.manage_requests()
         
         else:
